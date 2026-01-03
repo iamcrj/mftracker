@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+
 import FundSelector from "./components/FundSelector";
 import CAGRStrip from "./components/CAGRStrip";
 import PerformanceTable from "./components/PerformanceTable";
+import MarketTicker from "./components/MarketTicker";
+
 import { fetchSchemes, fetchNAV } from "./services/api";
 import {
   calculateYearlyReturns,
@@ -12,8 +15,8 @@ export default function App() {
   const [schemes, setSchemes] = useState([]);
   const [selected, setSelected] = useState(null);
 
-  const [years, setYears] = useState("");          // ✅ empty by default
-  const [error, setError] = useState("");          // ✅ validation error
+  const [years, setYears] = useState("");
+  const [error, setError] = useState("");
 
   const [rows, setRows] = useState([]);
   const [cagr, setCagr] = useState(null);
@@ -37,11 +40,12 @@ export default function App() {
   }
 
   async function viewPerformance() {
-    const validationError = validateYears(years);
     if (!selected) {
       setError("Please select a fund");
       return;
     }
+
+    const validationError = validateYears(years);
     if (validationError) {
       setError(validationError);
       return;
@@ -60,34 +64,39 @@ export default function App() {
   }
 
   return (
-    <div className="app">
-      <h1>Mutual Fund Performance</h1>
+    <>
+      {/* Running index ticker */}
+      <MarketTicker />
 
-      <FundSelector schemes={schemes} onSelect={setSelected} />
+      <div className="app">
+        <h1>Mutual Fund Performance</h1>
 
-      <div className="controls">
-        <div className="years-input">
-          <input
-            type="number"
-            placeholder="No. of years"
-            value={years}
-            onChange={handleYearsChange}
-            min="1"
-            max="6"
-          />
-          {error && <div className="error-text">{error}</div>}
+        <FundSelector schemes={schemes} onSelect={setSelected} />
+
+        <div className="controls">
+          <div className="years-input">
+            <input
+              type="number"
+              placeholder="No. of years"
+              value={years}
+              onChange={handleYearsChange}
+              min="1"
+              max="6"
+            />
+            {error && <div className="error-text">{error}</div>}
+          </div>
+
+          <button
+            onClick={viewPerformance}
+            disabled={loading || !!error || !years}
+          >
+            {loading ? "Loading…" : "View"}
+          </button>
         </div>
 
-        <button
-          onClick={viewPerformance}
-          disabled={loading || !!error || !years}
-        >
-          {loading ? "Loading…" : "View"}
-        </button>
+        <CAGRStrip value={cagr} years={years} />
+        <PerformanceTable rows={rows} />
       </div>
-
-      <CAGRStrip value={cagr} years={years} />
-      <PerformanceTable rows={rows} />
-    </div>
+    </>
   );
 }

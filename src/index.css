@@ -36,6 +36,48 @@ body {
 }
 
 /* =========================
+   Market ticker
+   ========================= */
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: #020617;
+  color: white;
+  padding: 8px 0;
+}
+
+.ticker {
+  display: flex;
+  gap: 40px;
+  animation: scroll 25s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.ticker-name {
+  font-weight: 600;
+}
+
+.ticker-price {
+  color: #e5e7eb;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* =========================
    App container
    ========================= */
 .app {
@@ -72,7 +114,7 @@ h1 {
   border-color: var(--primary);
 }
 
-/* Dropdown stays in normal flow */
+/* Dropdown stays in flow */
 .search-results {
   margin-top: 8px;
   background: white;
@@ -113,7 +155,6 @@ h1 {
   font-size: 14px;
   font-weight: 600;
   color: #1e3a8a;
-  margin-right: 12px;
 }
 
 .chip-clear {
@@ -130,7 +171,7 @@ h1 {
 }
 
 /* =========================
-   Controls (years + button)
+   Controls
    ========================= */
 .controls {
   display: flex;
@@ -149,11 +190,11 @@ h1 {
   border-radius: 12px;
   border: 1px solid var(--border);
   font-size: 15px;
-  outline: none;
 }
 
 .controls input:focus {
   border-color: var(--primary);
+  outline: none;
 }
 
 .controls button {
@@ -269,7 +310,7 @@ tbody tr:hover {
 }
 
 /* =========================
-   Responsive (mobile)
+   Mobile
    ========================= */
 @media (max-width: 640px) {
   .controls {
