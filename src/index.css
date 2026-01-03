@@ -97,6 +97,39 @@ h1 {
 }
 
 /* =========================
+   Selected fund chip
+   ========================= */
+.selected-chip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+}
+
+.chip-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-right: 12px;
+}
+
+.chip-clear {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip-clear:hover {
+  text-decoration: underline;
+}
+
+/* =========================
    Controls (years + button)
    ========================= */
 .controls {
