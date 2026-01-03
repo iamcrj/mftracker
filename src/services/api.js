@@ -23,23 +23,17 @@ function jsonp(url) {
   });
 }
 
-/* -------------------------
-   Schemes API (cached)
-------------------------- */
 export async function fetchSchemes() {
   try {
     const cached = sessionStorage.getItem(SCHEME_CACHE_KEY);
 
     if (cached) {
       const { timestamp, data } = JSON.parse(cached);
-
       if (Date.now() - timestamp < CACHE_TTL) {
-        // ✅ Cache hit
         return data;
       }
     }
 
-    // ❌ Cache miss → fetch
     const data = await jsonp(`${BASE_URL}?action=schemes`);
 
     if (Array.isArray(data)) {
@@ -59,9 +53,6 @@ export async function fetchSchemes() {
   }
 }
 
-/* -------------------------
-   NAV API (no caching)
-------------------------- */
 export function fetchNAV(schemeCode) {
   return jsonp(`${BASE_URL}?action=nav&schemeCode=${schemeCode}`);
 }
@@ -69,4 +60,3 @@ export function fetchNAV(schemeCode) {
 export function fetchIndices() {
   return jsonp(`${BASE_URL}?action=indices`);
 }
-

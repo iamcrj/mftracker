@@ -24,7 +24,6 @@ export default function FundSelector({ schemes = [], onSelect }) {
 
   return (
     <div className="search-box">
-      {/* Selected fund view */}
       {selected ? (
         <div className="selected-chip">
           <span className="chip-text">{selected.schemeName}</span>

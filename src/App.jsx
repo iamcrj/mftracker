@@ -65,7 +65,6 @@ export default function App() {
 
   return (
     <>
-      {/* Running index ticker */}
       <MarketTicker />
 
       <div className="app">

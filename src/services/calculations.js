@@ -3,7 +3,6 @@ function parseDate(d) {
   return new Date(`${yyyy}-${mm}-${dd}`);
 }
 
-/* Year-wise returns */
 export function calculateYearlyReturns(navData = [], years) {
   if (!Array.isArray(navData) || !years) return [];
 
@@ -32,7 +31,6 @@ export function calculateYearlyReturns(navData = [], years) {
   return rows;
 }
 
-/* CORRECT CAGR (Excel-matching) */
 export function calculateCAGRFromReturns(rows = []) {
   if (!rows.length) return null;
 
