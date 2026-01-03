@@ -1,0 +1,73 @@
+/* Light / Dark mode variables */
+:root {
+  --bg: #f8fafc;
+  --fg: #0f172a;
+  --card: #ffffff;
+  --accent: #4f46e5;
+}
+
+body.dark {
+  --bg: #0f172a;
+  --fg: #e5e7eb;
+  --card: #020617;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Layout */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  gap: 8px;
+  background: var(--card);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+input {
+  padding: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 14px;
+}

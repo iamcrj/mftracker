@@ -1,68 +1,259 @@
+/* =========================
+   Theme variables
+   ========================= */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary: #2563eb;
+  --primary-dark: #1e3a8a;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --positive: #16a34a;
+  --negative: #dc2626;
+
+  --border: #e5e7eb;
+  --row-border: #f1f5f9;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* =========================
+   Global reset
+   ========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(180deg, #f8fafc, #eef2ff);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================
+   App container
+   ========================= */
+.app {
+  max-width: 840px;
+  margin: auto;
+  padding: 20px;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 18px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+/* =========================
+   Fund search
+   ========================= */
+.search-box {
+  margin-bottom: 18px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  font-size: 15px;
+  background: white;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+}
+
+/* Dropdown stays in normal flow */
+.search-results {
+  margin-top: 8px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.search-item {
+  padding: 12px 16px;
+  font-size: 14px;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.search-item:not(:last-child) {
+  border-bottom: 1px solid var(--row-border);
+}
+
+.search-item:hover {
+  background: #eff6ff;
+}
+
+/* =========================
+   Controls (years + button)
+   ========================= */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.years-input {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  font-size: 15px;
+  outline: none;
+}
+
+.controls input:focus {
+  border-color: var(--primary);
+}
+
+.controls button {
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background: #1d4ed8;
+}
+
+.controls button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Validation error
+   ========================= */
+.error-text {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--negative);
+}
+
+/* =========================
+   CAGR strip
+   ========================= */
+.cagr-strip {
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark),
+    var(--primary)
+  );
+  color: white;
+  padding: 18px 20px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.cagr-strip span {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.cagr-strip strong {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+/* =========================
+   Performance table
+   ========================= */
+.table-wrap {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #fafafa;
+}
+
+th {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+td {
+  padding: 16px 18px;
+  font-size: 15px;
+}
+
+tbody tr:not(:last-child) {
+  border-bottom: 1px solid var(--row-border);
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* =========================
+   Positive / negative
+   ========================= */
+.pos {
+  color: var(--positive);
+  font-weight: 600;
+}
+
+.neg {
+  color: var(--negative);
+  font-weight: 600;
+}
+
+/* =========================
+   Responsive (mobile)
+   ========================= */
+@media (max-width: 640px) {
+  .controls {
+    flex-direction: column;
   }
-  a:hover {
-    color: #747bff;
+
+  .controls button {
+    width: 100%;
   }
-  button {
-    background-color: #f9f9f9;
+
+  .cagr-strip {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .cagr-strip strong {
+    font-size: 28px;
   }
 }
