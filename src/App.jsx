@@ -4,6 +4,7 @@ import FundSelector from "./components/FundSelector";
 import CAGRStrip from "./components/CAGRStrip";
 import PerformanceTable from "./components/PerformanceTable";
 import MarketTicker from "./components/MarketTicker";
+import InvestmentProjection from "./components/InvestmentProjection";
 
 import { fetchSchemes, fetchNAV } from "./services/api";
 import {
@@ -67,8 +68,24 @@ export default function App() {
     <>
       <MarketTicker />
 
+      <nav className="navbar">
+        <div className="nav-inner">
+          <div className="brand">FundLens</div>
+          <div className="nav-links">
+            <span className="nav-link active">Returns</span>
+            <span className="nav-link">About</span>
+          </div>
+        </div>
+      </nav>
+
       <div className="app">
-        <h1>Mutual Fund Performance</h1>
+        <header className="hero">
+          <h1>Mutual Fund Historical Returns</h1>
+          <p>
+            View calendar-year returns and estimated CAGR
+            based on historical NAV data.
+          </p>
+        </header>
 
         <FundSelector schemes={schemes} onSelect={setSelected} />
 
@@ -93,7 +110,22 @@ export default function App() {
           </button>
         </div>
 
+        {cagr != null && (
+          <div className="disclaimer">
+            Returns shown are based on historical NAV data
+            and are for informational purposes only. Actual
+            returns may vary.
+          </div>
+        )}
+
         <CAGRStrip value={cagr} years={years} />
+
+        {/* 🔽 NEW SECTION */}
+        <InvestmentProjection
+          cagr={cagr}
+          years={Number(years)}
+        />
+
         <PerformanceTable rows={rows} />
       </div>
     </>
