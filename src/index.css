@@ -14,6 +14,9 @@
   --row-border: #f1f5f9;
 }
 
+/* ======================
+   BASE
+====================== */
 *,
 *::before,
 *::after {
@@ -30,28 +33,30 @@ body {
 }
 
 /* ======================
-   TICKER
+   MARKET TICKER
 ====================== */
 .ticker-wrap {
   width: 100%;
-  overflow: hidden;
+  height: 34px;
   background: #020617;
   color: white;
-  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
 
 .ticker {
   display: flex;
-  gap: 40px;
-  animation: scroll 25s linear infinite;
+  gap: 32px;
   white-space: nowrap;
+  animation: scroll 30s linear infinite;
 }
 
 .ticker-item {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .ticker-name {
@@ -82,7 +87,7 @@ body {
 .nav-inner {
   max-width: 960px;
   margin: auto;
-  padding: 14px 20px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -97,18 +102,29 @@ body {
 
 .nav-links {
   display: flex;
-  gap: 18px;
+  gap: 10px;
 }
 
-.nav-link {
-  font-size: 14px;
-  color: var(--muted);
+.nav-btn {
+  appearance: none;
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  color: #1e3a8a;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
 }
 
-.nav-link.active {
-  color: var(--primary);
-  font-weight: 600;
+.nav-btn:hover {
+  background: #dbeafe;
+}
+
+.nav-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }
 
 /* ======================
@@ -117,7 +133,7 @@ body {
 .app {
   max-width: 840px;
   margin: auto;
-  padding: 20px;
+  padding: 24px 20px;
 }
 
 /* ======================
@@ -131,7 +147,6 @@ body {
 .hero h1 {
   font-size: 28px;
   font-weight: 800;
-  letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
 
@@ -157,7 +172,7 @@ body {
 }
 
 /* ======================
-   SEARCH
+   FUND SEARCH
 ====================== */
 .search-box {
   margin-bottom: 18px;
@@ -238,22 +253,11 @@ body {
   margin-bottom: 18px;
 }
 
-.years-input {
+.controls > input {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.controls input {
   padding: 12px 14px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  font-size: 15px;
-}
-
-.controls input:focus {
-  border-color: var(--primary);
-  outline: none;
 }
 
 .controls button {
@@ -262,24 +266,8 @@ body {
   border: none;
   background: var(--primary);
   color: white;
-  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-}
-
-.controls button:hover {
-  background: #1d4ed8;
-}
-
-.controls button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.error-text {
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--negative);
 }
 
 /* ======================
@@ -376,32 +364,27 @@ table {
   border-collapse: collapse;
 }
 
-thead {
-  background: #fafafa;
-}
-
 th {
   padding: 14px 18px;
-  text-align: left;
   font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  letter-spacing: 0.06em;
   text-transform: uppercase;
+  color: var(--muted);
 }
 
-th:last-child {
+/* 🔧 FIX 2: YEAR ALIGNMENT */
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+th:last-child,
+td:last-child {
   text-align: right;
 }
 
 td {
   padding: 16px 18px;
   font-size: 15px;
-  font-variant-numeric: tabular-nums;
-}
-
-td:last-child {
-  text-align: right;
 }
 
 tbody tr:not(:last-child) {
@@ -417,9 +400,31 @@ tbody tr:hover {
   font-weight: 600;
 }
 
-.neg {
-  color: var(--negative);
-  font-weight: 600;
+/* ======================
+   TOP FUNDS PAGE
+====================== */
+.top-funds {
+  max-width: 960px;
+  margin: auto;
+  padding: 24px 20px;
+}
+
+.top-funds h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.filters select {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: white;
 }
 
 /* ======================
@@ -430,21 +435,7 @@ tbody tr:hover {
     flex-direction: column;
   }
 
-  .controls button {
-    width: 100%;
-  }
-
-  .cagr-strip {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-  }
-
-  .cagr-strip strong {
-    font-size: 28px;
-  }
-
-  .projection-values {
+  .filters {
     flex-direction: column;
   }
 }
