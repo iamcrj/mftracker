@@ -3,9 +3,10 @@ const BASE_URL =
 
 const SCHEME_CACHE_KEY = "mf_schemes_cache";
 const AMFI_RETURNS_CACHE_KEY = "mf_amfi_returns_cache";
-const INDEX_CACHE_KEY = "mf_indices_cache";
-const INDEX_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const INDICES_CACHE_KEY = "mf_indices_cache";
+
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+const INDICES_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 function jsonp(url) {
   return new Promise((resolve, reject) => {
@@ -31,8 +32,38 @@ export function fetchNAV(schemeCode) {
   return jsonp(`${BASE_URL}?action=nav&schemeCode=${schemeCode}`);
 }
 
-export function fetchIndices() {
-  return jsonp(`${BASE_URL}?action=indices`);
+export async function fetchIndices() {
+  try {
+    const cached = sessionStorage.getItem(INDICES_CACHE_KEY);
+
+    if (cached) {
+      const { timestamp, data } = JSON.parse(cached);
+      if (
+        Array.isArray(data) &&
+        Date.now() - timestamp < INDICES_CACHE_TTL
+      ) {
+        return data;
+      }
+    }
+
+    const data = await jsonp(
+      `${BASE_URL}?action=indices`
+    );
+
+    if (Array.isArray(data) && data.length > 0) {
+      sessionStorage.setItem(
+        INDICES_CACHE_KEY,
+        JSON.stringify({
+          timestamp: Date.now(),
+          data
+        })
+      );
+    }
+
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchSchemes() {
@@ -41,14 +72,19 @@ export async function fetchSchemes() {
 
     if (cached) {
       const { timestamp, data } = JSON.parse(cached);
-      if (Date.now() - timestamp < CACHE_TTL) {
+      if (
+        Array.isArray(data) &&
+        Date.now() - timestamp < CACHE_TTL
+      ) {
         return data;
       }
     }
 
-    const data = await jsonp(`${BASE_URL}?action=schemes`);
+    const data = await jsonp(
+      `${BASE_URL}?action=schemes`
+    );
 
-    if (Array.isArray(data)) {
+    if (Array.isArray(data) && data.length > 0) {
       sessionStorage.setItem(
         SCHEME_CACHE_KEY,
         JSON.stringify({
@@ -72,7 +108,10 @@ export async function fetchAmfiReturns() {
 
     if (cached) {
       const { timestamp, data } = JSON.parse(cached);
-      if (Date.now() - timestamp < CACHE_TTL) {
+      if (
+        Array.isArray(data) &&
+        Date.now() - timestamp < CACHE_TTL
+      ) {
         return data;
       }
     }
@@ -81,7 +120,7 @@ export async function fetchAmfiReturns() {
       `${BASE_URL}?action=amfiReturns`
     );
 
-    if (Array.isArray(data)) {
+    if (Array.isArray(data) && data.length > 0) {
       sessionStorage.setItem(
         AMFI_RETURNS_CACHE_KEY,
         JSON.stringify({
