@@ -3,6 +3,8 @@ const BASE_URL =
 
 const SCHEME_CACHE_KEY = "mf_schemes_cache";
 const AMFI_RETURNS_CACHE_KEY = "mf_amfi_returns_cache";
+const INDEX_CACHE_KEY = "mf_indices_cache";
+const INDEX_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 function jsonp(url) {
