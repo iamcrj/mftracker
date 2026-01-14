@@ -33,16 +33,10 @@ function jsonp(url) {
   });
 }
 
-/* ======================
-   NAV
-====================== */
 export function fetchNAV(schemeCode) {
   return jsonp(`${BASE_URL}?action=nav&schemeCode=${schemeCode}`);
 }
 
-/* ======================
-   INDICES
-====================== */
 export async function fetchIndices() {
   try {
     const cached = sessionStorage.getItem(INDICES_CACHE_KEY);
@@ -69,9 +63,6 @@ export async function fetchIndices() {
   }
 }
 
-/* ======================
-   SCHEMES
-====================== */
 export async function fetchSchemes() {
   try {
     const cached = sessionStorage.getItem(SCHEME_CACHE_KEY);
@@ -98,9 +89,6 @@ export async function fetchSchemes() {
   }
 }
 
-/* ======================
-   AMFI RETURNS
-====================== */
 export async function fetchAmfiReturns() {
   try {
     const cached = sessionStorage.getItem(AMFI_RETURNS_CACHE_KEY);
@@ -127,9 +115,6 @@ export async function fetchAmfiReturns() {
   }
 }
 
-/* ======================
-   LIVE IPO (24H CACHE)
-====================== */
 export async function fetchLiveIPO() {
   try {
     const cached = sessionStorage.getItem(IPO_CACHE_KEY);

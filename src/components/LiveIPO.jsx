@@ -4,12 +4,17 @@ import { fetchLiveIPO } from "../services/api";
 export default function LiveIPO() {
   const [ipos, setIpos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [segment, setSegment] = useState("EQ"); // EQ | SME
 
   useEffect(() => {
     fetchLiveIPO()
       .then(setIpos)
       .finally(() => setLoading(false));
   }, []);
+
+  const filtered = ipos.filter(
+    ipo => ipo.series === segment
+  );
 
   return (
     <div className="live-ipo">
@@ -19,18 +24,43 @@ export default function LiveIPO() {
         and subscription status.
       </p>
 
+      {/* Desktop segment switch */}
+      <div className="ipo-segment desktop-only">
+        <button
+          className={
+            segment === "EQ"
+              ? "seg-btn active"
+              : "seg-btn"
+          }
+          onClick={() => setSegment("EQ")}
+        >
+          Mainline IPOs
+        </button>
+        <button
+          className={
+            segment === "SME"
+              ? "seg-btn active"
+              : "seg-btn"
+          }
+          onClick={() => setSegment("SME")}
+        >
+          SME IPOs
+        </button>
+      </div>
+
       {loading && (
         <div className="muted">Loading IPOs…</div>
       )}
 
-      {!loading && ipos.length === 0 && (
+      {!loading && filtered.length === 0 && (
         <div className="muted">
-          No active IPOs at the moment.
+          No {segment === "EQ" ? "Mainline" : "SME"}{" "}
+          IPOs currently available.
         </div>
       )}
 
       <div className="ipo-grid">
-        {ipos.map(ipo => (
+        {filtered.map(ipo => (
           <div className="ipo-card" key={ipo.symbol}>
             <div className="ipo-header">
               <div>
@@ -42,13 +72,7 @@ export default function LiveIPO() {
                 </div>
               </div>
 
-              <span
-                className={
-                  ipo.status === "Active"
-                    ? "ipo-status active"
-                    : "ipo-status"
-                }
-              >
+              <span className="ipo-status active">
                 {ipo.status}
               </span>
             </div>
@@ -71,6 +95,7 @@ export default function LiveIPO() {
                   <strong>{ipo.issuePrice}</strong>
                 </div>
               )}
+
               {ipo.issueSize && (
                 <div>
                   <span>Issue Size</span>
@@ -81,6 +106,7 @@ export default function LiveIPO() {
                   </strong>
                 </div>
               )}
+
               {ipo.noOfTime && (
                 <div>
                   <span>Subscription</span>
@@ -92,6 +118,30 @@ export default function LiveIPO() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Mobile bottom bar */}
+      <div className="ipo-bottom-bar mobile-only">
+        <button
+          className={
+            segment === "EQ"
+              ? "bottom-btn active"
+              : "bottom-btn"
+          }
+          onClick={() => setSegment("EQ")}
+        >
+          Mainline
+        </button>
+        <button
+          className={
+            segment === "SME"
+              ? "bottom-btn active"
+              : "bottom-btn"
+          }
+          onClick={() => setSegment("SME")}
+        >
+          SME
+        </button>
       </div>
     </div>
   );
