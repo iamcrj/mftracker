@@ -1,9 +1,6 @@
 const BASE_URL =
   "https://script.google.com/macros/s/AKfycbzLj5eQm1dG_79euAUCRORWv1-5Jkz9GRKy1SSGjz6jzVUislcQ5uAhmmxGEyxx7JsHsw/exec";
 
-const IPO_URL =
-  "https://fundlens.onrender.com/api/nse/ipo/current";
-
 const SCHEME_CACHE_KEY = "mf_schemes_cache";
 const AMFI_RETURNS_CACHE_KEY = "mf_amfi_returns_cache";
 const INDICES_CACHE_KEY = "mf_indices_cache";
@@ -128,16 +125,13 @@ export async function fetchLiveIPO() {
       }
     }
 
-    const res = await fetch(IPO_URL);
-    const data = await res.json();
-
+    const data = await jsonp(`${BASE_URL}?action=ipoCurrent`);
     if (Array.isArray(data) && data.length) {
       sessionStorage.setItem(
         IPO_CACHE_KEY,
         JSON.stringify({ timestamp: Date.now(), data })
       );
     }
-
     return Array.isArray(data) ? data : [];
   } catch {
     return [];
