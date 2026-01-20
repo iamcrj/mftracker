@@ -5,12 +5,18 @@ export default function MarketTicker() {
   const [indices, setIndices] = useState([]);
 
   useEffect(() => {
-    fetchIndices().then(data => setIndices(data || []));
-    const id = setInterval(() => {
-      fetchIndices().then(data => setIndices(data || []));
-    }, 120000); // refresh every 1 min
+    let mounted = true;
 
-    return () => clearInterval(id);
+    fetchIndices().then(d => mounted && setIndices(d || []));
+
+    const id = setInterval(() => {
+      fetchIndices().then(d => mounted && setIndices(d || []));
+    }, 120000);
+
+    return () => {
+      mounted = false;
+      clearInterval(id);
+    };
   }, []);
 
   if (!indices.length) return null;
@@ -19,11 +25,9 @@ export default function MarketTicker() {
     <div className="ticker-wrap">
       <div className="ticker">
         {indices.map((i, idx) => (
-          <div className="ticker-item" key={idx}>
-            <span className="ticker-name">{i.name}</span>
-            <span className="ticker-price">
-              {i.price?.toFixed(2)}
-            </span>
+          <div key={idx} className="ticker-item">
+            <span>{i.name}</span>
+            <span>{i.price?.toFixed(2)}</span>
             <span className={i.percent >= 0 ? "pos" : "neg"}>
               {i.percent?.toFixed(2)}%
             </span>

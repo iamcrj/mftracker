@@ -1,35 +1,21 @@
 import { useEffect, useState } from "react";
 import { fetchAmfiReturns } from "../services/api";
+import "./css/TopFunds.css";
 
 export default function TopFunds() {
   const [data, setData] = useState([]);
   const [category, setCategory] = useState("");
   const [year, setYear] = useState("2025");
   const [loading, setLoading] = useState(true);
-  const [fromCache, setFromCache] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-
-    const cached = sessionStorage.getItem(
-      "mf_amfi_returns_cache"
-    );
-
-    if (cached) {
-      setFromCache(true);
-    }
-
     fetchAmfiReturns()
-      .then(res => {
-        setData(res || []);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .then(res => setData(res || []))
+      .finally(() => setLoading(false));
   }, []);
 
   const categories = [
-    ...new Set(data.map(d => d.category))
+    ...new Set(data.map(d => d.category).filter(Boolean))
   ];
 
   const yearKey = `return${year}`;
@@ -41,114 +27,117 @@ export default function TopFunds() {
     .slice(0, 10);
 
   return (
-    <div className="top-funds">
-      <h2>Top Mutual Funds by Category</h2>
-      <p className="muted">
-        See top performing mutual funds over the last
-        three calendar years based on reported returns.
-      </p>
+    <div className="topfunds">
+      {/* Header */}
+      <div className="topfunds__header">
+        <h2 className="topfunds__title">
+          Top Performers
+        </h2>
+        <p className="topfunds__subtitle">
+          Best performing mutual funds by category and
+          calendar year.
+        </p>
+      </div>
 
-      {fromCache && !loading && (
-        <div className="cache-indicator">
-          Showing cached data (updated hourly)
+      {/* Filters */}
+      <div className="topfunds__filters">
+        <select
+          value={category}
+          onChange={e => setCategory(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map(c => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={year}
+          onChange={e => setYear(e.target.value)}
+        >
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+        </select>
+      </div>
+
+      {/* Loading state */}
+      {loading && (
+        <div className="topfunds__loading">
+          <span className="topfunds__spinner" />
         </div>
       )}
 
-      {/* 🔄 Loading state */}
-      {loading && (
-        <>
-          <div className="loading-row">
-            <span className="spinner" />
-            Loading top funds…
-          </div>
-
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Fund</th>
-                  <th>Category</th>
-                  <th>Return</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...Array(5)].map((_, i) => (
-                  <tr key={i}>
-                    <td>
-                      <div className="skeleton skeleton-text" />
-                    </td>
-                    <td>
-                      <div className="skeleton skeleton-text short" />
-                    </td>
-                    <td>
-                      <div className="skeleton skeleton-text tiny" />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
+      {/* Empty state */}
+      {!loading && filtered.length === 0 && (
+        <div className="topfunds__empty">
+          No funds available for selected filters.
+        </div>
       )}
 
-      {/* ✅ Loaded content */}
-      {!loading && (
-        <>
-          <div className="filters">
-            <select
-              value={category}
-              onChange={e =>
-                setCategory(e.target.value)
-              }
-            >
-              <option value="">All Categories</option>
-              {categories.map(c => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
+      {/* Desktop table */}
+      {!loading && filtered.length > 0 && (
+        <div className="topfunds__table-wrap desktop-only">
+          <table className="topfunds__table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Fund</th>
+                <th>Category</th>
+                <th className="right">
+                  Return ({year})
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((f, i) => (
+                <tr key={f.schemeCode}>
+                  <td className="rank">{i + 1}</td>
+                  <td className="fund-name">
+                    {f.schemeName}
+                  </td>
+                  <td className="fund-category">
+                    {f.category}
+                  </td>
+                  <td className="fund-return">
+                    {f[yearKey].toFixed(2)}%
+                  </td>
+                </tr>
               ))}
-            </select>
+            </tbody>
+          </table>
+        </div>
+      )}
 
-            <select
-              value={year}
-              onChange={e => setYear(e.target.value)}
+      {/* Mobile cards */}
+      {!loading && filtered.length > 0 && (
+        <div className="topfunds__cards mobile-only">
+          {filtered.map((f, i) => (
+            <div
+              className="topfund-card"
+              key={f.schemeCode}
             >
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-            </select>
-          </div>
+              <div className="card-top">
+                <span className="card-rank">
+                  #{i + 1}
+                </span>
+                <span className="card-return">
+                  {f[yearKey].toFixed(2)}%
+                </span>
+              </div>
 
-          {filtered.length === 0 ? (
-            <div className="muted">
-              No funds available for the selected
-              filters.
+              <div className="card-name">
+                {f.schemeName}
+              </div>
+
+              <div className="card-category">
+                {f.category}
+              </div>
             </div>
-          ) : (
-            <div className="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Fund</th>
-                    <th>Category</th>
-                    <th>Return ({year})</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map(f => (
-                    <tr key={f.schemeCode}>
-                      <td>{f.schemeName}</td>
-                      <td>{f.category}</td>
-                      <td className="pos">
-                        {f[yearKey].toFixed(2)}%
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </>
+          ))}
+        </div>
       )}
     </div>
   );

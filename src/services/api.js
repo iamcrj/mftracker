@@ -5,10 +5,13 @@ const SCHEME_CACHE_KEY = "mf_schemes_cache";
 const AMFI_RETURNS_CACHE_KEY = "mf_amfi_returns_cache";
 const INDICES_CACHE_KEY = "mf_indices_cache";
 const IPO_CACHE_KEY = "mf_live_ipo_cache";
+const AMFI_RECENT_RETURNS_CACHE_KEY =
+  "mf_amfi_recent_returns_cache";
 
-const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+const CACHE_TTL = 48 * 60 * 60 * 1000; // 48 hours
 const INDICES_CACHE_TTL = 5 * 60 * 1000; // 5 min
 const IPO_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+const RECENT_RETURNS_TTL = 24 * 60 * 60 * 1000;
 
 function jsonp(url) {
   return new Promise((resolve, reject) => {
@@ -132,6 +135,39 @@ export async function fetchLiveIPO() {
         JSON.stringify({ timestamp: Date.now(), data })
       );
     }
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchAmfiRecentReturns() {
+  try {
+    const cached = sessionStorage.getItem(
+      AMFI_RECENT_RETURNS_CACHE_KEY
+    );
+
+    if (cached) {
+      const { timestamp, data } = JSON.parse(cached);
+      if (
+        Array.isArray(data) &&
+        Date.now() - timestamp < RECENT_RETURNS_TTL
+      ) {
+        return data;
+      }
+    }
+
+    const data = await jsonp(
+      `${BASE_URL}?action=amfiRecentReturns`
+    );
+
+    if (Array.isArray(data) && data.length) {
+      sessionStorage.setItem(
+        AMFI_RECENT_RETURNS_CACHE_KEY,
+        JSON.stringify({ timestamp: Date.now(), data })
+      );
+    }
+
     return Array.isArray(data) ? data : [];
   } catch {
     return [];

@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-
-import FundSelector from "./components/FundSelector";
-import CAGRStrip from "./components/CAGRStrip";
-import PerformanceTable from "./components/PerformanceTable";
-import InvestmentProjection from "./components/InvestmentProjection";
+import { useEffect, useRef, useState } from "react";
+import "./ReturnsPage.css";
 
 import { fetchSchemes, fetchNAV } from "./services/api";
 import {
@@ -13,101 +9,204 @@ import {
 
 export default function ReturnsPage() {
   const [schemes, setSchemes] = useState([]);
+  const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
 
   const [years, setYears] = useState("");
-  const [error, setError] = useState("");
-
   const [rows, setRows] = useState([]);
   const [cagr, setCagr] = useState(null);
+
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const inputRef = useRef(null);
 
   useEffect(() => {
     fetchSchemes().then(data => setSchemes(data || []));
   }, []);
 
-  function validateYears(value) {
-    if (!value) return "Please enter number of years";
-    if (value <= 0) return "Years must be greater than 0";
-    if (value > 6) return "Maximum allowed is 6 years";
-    return "";
-  }
-
-  function handleYearsChange(e) {
-    const value = e.target.value;
-    setYears(value);
-    setError(validateYears(value));
-  }
+  const suggestions =
+    query.length > 1
+      ? schemes.filter(s =>
+          s.schemeName
+            .toLowerCase()
+            .includes(query.toLowerCase())
+        )
+      : [];
 
   async function viewPerformance() {
     if (!selected) {
-      setError("Please select a fund");
+      setError("Please select a mutual fund");
+      return;
+    }
+    if (!years || years <= 0) {
+      setError("Please enter valid number of years");
       return;
     }
 
-    const validationError = validateYears(years);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
-    setError("");
     setLoading(true);
+    setError("");
 
-    const navData = await fetchNAV(selected.schemeCode);
-    const yearly = calculateYearlyReturns(navData, Number(years));
+    const nav = await fetchNAV(selected.schemeCode);
+    const yearly = calculateYearlyReturns(nav, Number(years));
 
     setRows(yearly);
     setCagr(calculateCAGRFromReturns(yearly));
-
     setLoading(false);
   }
 
+  function clearFund() {
+    setSelected(null);
+    setQuery("");
+    setRows([]);
+    setCagr(null);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  }
+
   return (
-    <div className="app">
-      <header className="hero">
-        <h1>Mutual Fund Historical Returns</h1>
+    <section
+      id="returnsPage"
+      className="returnsPage"
+    >
+      {/* Header */}
+      <header className="returnsPage__header">
+        <h1>Mutual Fund Performance</h1>
         <p>
-          View calendar-year returns and estimated CAGR
-          based on historical NAV data.
+          View historical returns and estimated CAGR
+          based on NAV data.
         </p>
       </header>
 
-      <FundSelector schemes={schemes} onSelect={setSelected} />
+      {/* Fund Search */}
+      <div className="returnsPage__selector">
+        {selected ? (
+          <div className="returnsPage__selected">
+            <span>{selected.schemeName}</span>
+            <button onClick={clearFund}>Change</button>
+          </div>
+        ) : (
+          <>
+            <input
+              ref={inputRef}
+              className="returnsPage__search"
+              placeholder="Search mutual fund…"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+            />
 
-      <div className="controls">
+            {suggestions.length > 0 && (
+              <div className="returnsPage__suggestions">
+                {suggestions.slice(0, 10).map(s => (
+                  <div
+                    key={s.schemeCode}
+                    className="returnsPage__suggestion"
+                    onClick={() => {
+                      setSelected(s);
+                      setQuery("");
+                    }}
+                  >
+                    {s.schemeName}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Controls */}
+      <div className="returnsPage__controls">
         <input
           type="number"
-          placeholder="No. of years"
-          value={years}
-          onChange={handleYearsChange}
           min="1"
           max="6"
+          placeholder="Years (1–6)"
+          value={years}
+          onChange={e => setYears(e.target.value)}
         />
 
         <button
           onClick={viewPerformance}
-          disabled={loading || !!error || !years}
+          disabled={loading}
         >
-          {loading ? "Loading…" : "View"}
+          {loading ? "Calculating…" : "View"}
         </button>
       </div>
 
-      {error && <div className="error-text">{error}</div>}
-
-      {cagr != null && (
-        <div className="disclaimer">
-          Returns shown are based on historical NAV data
-          and are for informational purposes only.
+      {error && (
+        <div className="returnsPage__error">
+          {error}
         </div>
       )}
 
-      <CAGRStrip value={cagr} years={years} />
-      <InvestmentProjection
-        cagr={cagr}
-        years={Number(years)}
-      />
-      <PerformanceTable rows={rows} />
-    </div>
+      {/* CAGR */}
+      {cagr !== null && (
+        <div className="returnsPage__cagr">
+          <span>{years}Y CAGR</span>
+          <strong>
+            {(cagr * 100).toFixed(2)}%
+          </strong>
+        </div>
+      )}
+
+      {/* Projection */}
+      {cagr !== null && (
+        <div className="returnsPage__projection">
+          <h4>If you had invested ₹1,00,000</h4>
+
+          <div className="returnsPage__projectionGrid">
+            <div>
+              <label>After 1 year </label>
+              <strong>
+                ₹
+                {Math.round(
+                  100000 * (1 + cagr)
+                ).toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div>
+              <label>After {years} years </label>
+              <strong className="highlight">
+                ₹
+                {Math.round(
+                  100000 *
+                    Math.pow(1 + cagr, years)
+                ).toLocaleString("en-IN")}
+              </strong>
+            </div>
+          </div>
+
+          <p className="note">
+            Based on CAGR; actual returns may
+            differ.
+          </p>
+        </div>
+      )}
+
+      {/* Table */}
+      {rows.length > 0 && (
+        <div className="returnsPage__tableWrap">
+          <table className="returnsPage__table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th className="right">Return</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(r => (
+                <tr key={r.year}>
+                  <td>{r.year}</td>
+                  <td className="right pos">
+                    {(r.value * 100).toFixed(2)}%
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }
