@@ -68,7 +68,6 @@ export default function ReturnsPage() {
       id="returnsPage"
       className="returnsPage"
     >
-      {/* Header */}
       <header className="returnsPage__header">
         <h1>Mutual Fund Performance</h1>
         <p>
@@ -77,7 +76,6 @@ export default function ReturnsPage() {
         </p>
       </header>
 
-      {/* Fund Search */}
       <div className="returnsPage__selector">
         {selected ? (
           <div className="returnsPage__selected">
@@ -114,7 +112,6 @@ export default function ReturnsPage() {
         )}
       </div>
 
-      {/* Controls */}
       <div className="returnsPage__controls">
         <input
           type="number"
@@ -139,7 +136,6 @@ export default function ReturnsPage() {
         </div>
       )}
 
-      {/* CAGR */}
       {cagr !== null && (
         <div className="returnsPage__cagr">
           <span>{years}Y CAGR</span>
@@ -149,7 +145,6 @@ export default function ReturnsPage() {
         </div>
       )}
 
-      {/* Projection */}
       {cagr !== null && (
         <div className="returnsPage__projection">
           <h4>If you had invested ₹1,00,000</h4>
@@ -184,7 +179,6 @@ export default function ReturnsPage() {
         </div>
       )}
 
-      {/* Table */}
       {rows.length > 0 && (
         <div className="returnsPage__tableWrap">
           <table className="returnsPage__table">

@@ -32,10 +32,8 @@ export default function App() {
 
   return (
     <div id="app_root" className="app-root">
-      {/* ===== Market Ticker ===== */}
       <MarketTicker />
 
-      {/* ===== Top Navigation ===== */}
       <nav
         id="app_navbar"
         className="app-navbar"
@@ -88,7 +86,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* ===== Main Content ===== */}
       <main
         id="app_content"
         className="app-content"
@@ -96,7 +93,6 @@ export default function App() {
         {renderPage()}
       </main>
 
-      {/* ===== Footer ===== */}
       <footer
         id="app_footer"
         className="app-footer"

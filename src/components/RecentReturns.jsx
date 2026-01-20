@@ -26,10 +26,6 @@ export default function RecentReturns() {
       .finally(() => setLoading(false));
   }, []);
 
-  /* ----------------------------------------
-     Derived values
-  ---------------------------------------- */
-
   const allCategories = useMemo(() => {
     return [
       ...new Set(
@@ -64,10 +60,6 @@ export default function RecentReturns() {
   const periodRange =
     filteredData[0]?.[period] || null;
 
-  /* ----------------------------------------
-     Handlers
-  ---------------------------------------- */
-
   function toggleCategory(category) {
     setSelectedCategories(prev =>
       prev.includes(category)
@@ -76,13 +68,8 @@ export default function RecentReturns() {
     );
   }
 
-  /* ----------------------------------------
-     Render
-  ---------------------------------------- */
-
   return (
     <section className="recent-returns">
-      {/* Header */}
       <header className="recent-returns__header">
         <h2 className="recent-returns__title">
           Fund Short-Term Trends
@@ -93,7 +80,6 @@ export default function RecentReturns() {
         </p>
       </header>
 
-      {/* Period Tabs */}
       <div className="recent-returns__periods">
         {PERIODS.map(p => (
           <button
@@ -110,7 +96,6 @@ export default function RecentReturns() {
         ))}
       </div>
 
-      {/* Search + Filter toggle */}
       <div className="recent-returns__toolbar">
         <input
           className="recent-returns__search"
@@ -132,14 +117,12 @@ export default function RecentReturns() {
         </button>
       </div>
 
-      {/* Loading */}
       {loading && (
         <div className="recent-returns__loading">
           <span className="recent-returns__spinner" />
         </div>
       )}
 
-      {/* Content */}
       {!loading && (
         <div
           className={
@@ -148,7 +131,6 @@ export default function RecentReturns() {
               : "recent-returns__content"
           }
         >
-          {/* Filters panel */}
           {showFilters && (
             <aside className="recent-returns__filters">
               <div className="filters__title">
@@ -177,9 +159,7 @@ export default function RecentReturns() {
             </aside>
           )}
 
-          {/* Results */}
           <div className="recent-returns__results">
-            {/* Period info */}
             {periodRange && (
               <div className="recent-returns__period-info">
                 Period: {periodRange.from} →{" "}
@@ -187,7 +167,6 @@ export default function RecentReturns() {
               </div>
             )}
 
-            {/* Desktop table */}
             <div className="recent-returns__table-wrapper">
               <table className="recent-returns__table">
                 <thead>
@@ -231,7 +210,6 @@ export default function RecentReturns() {
               </table>
             </div>
 
-            {/* Mobile cards */}
             <div className="recent-returns__cards">
               {filteredData.map(f => (
                 <div

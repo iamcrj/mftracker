@@ -19,7 +19,6 @@ export default function LiveIPO() {
 
   return (
     <div className="live-ipo">
-      {/* Header */}
       <div className="live-ipo__header">
         <h2 className="live-ipo__title">Live IPOs</h2>
         <p className="live-ipo__subtitle">
@@ -28,7 +27,6 @@ export default function LiveIPO() {
         </p>
       </div>
 
-      {/* Segment switch – desktop */}
       <div className="live-ipo__segments desktop-only">
         <button
           className={`segment-btn ${
@@ -48,14 +46,12 @@ export default function LiveIPO() {
         </button>
       </div>
 
-      {/* Loading */}
       {loading && (
         <div className="live-ipo__loading">
           Loading IPOs…
         </div>
       )}
 
-      {/* Empty */}
       {!loading && filtered.length === 0 && (
         <div className="live-ipo__empty">
           No {segment === "EQ" ? "Mainline" : "SME"} IPOs
@@ -63,7 +59,6 @@ export default function LiveIPO() {
         </div>
       )}
 
-      {/* IPO Cards */}
       <div className="live-ipo__grid">
         {filtered.map(ipo => (
           <div className="ipo-card" key={ipo.symbol}>
@@ -123,7 +118,6 @@ export default function LiveIPO() {
         ))}
       </div>
 
-      {/* Bottom switch – mobile */}
       <div className="live-ipo__bottom mobile-only">
         <button
           className={`bottom-tab ${
