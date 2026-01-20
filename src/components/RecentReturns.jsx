@@ -85,7 +85,7 @@ export default function RecentReturns() {
       {/* Header */}
       <header className="recent-returns__header">
         <h2 className="recent-returns__title">
-          Mutual Fund Short-Term Trends
+          Fund Short-Term Trends
         </h2>
         <p className="recent-returns__subtitle">
           View top performing funds across

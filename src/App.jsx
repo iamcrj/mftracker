@@ -19,8 +19,8 @@ export default function App() {
         return <TopFunds />;
       case "recent":
         return <RecentReturns />;
-      case "ipo":
-        return <LiveIPO />;
+      // case "ipo":
+      //   return <LiveIPO />;
       case "privacy":
         return <PrivacyPolicy />;
       case "disclaimer":
@@ -76,14 +76,14 @@ export default function App() {
               Trends
             </button>
 
-            <button
+            {/* <button
               className={`app-nav-btn ${
                 page === "ipo" ? "active" : ""
               }`}
               onClick={() => setPage("ipo")}
             >
               IPOs
-            </button>
+            </button> */}
           </div>
         </div>
       </nav>
