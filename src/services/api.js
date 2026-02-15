@@ -8,6 +8,9 @@ const IPO_CACHE_KEY = "mf_live_ipo_cache";
 const AMFI_RECENT_RETURNS_CACHE_KEY =
   "mf_amfi_recent_returns_cache";
 
+const SECTOR_RANK_CACHE_KEY = "mf_sector_rank_cache";
+const ONE_MONTH_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
+
 const CACHE_TTL = 48 * 60 * 60 * 1000; // 48 hours
 const INDICES_CACHE_TTL = 5 * 60 * 1000; // 5 min
 const IPO_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
@@ -109,6 +112,35 @@ export async function fetchAmfiReturns() {
         JSON.stringify({ timestamp: Date.now(), data })
       );
     }
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchSectorRankings() {
+  try {
+    const cached = sessionStorage.getItem(SECTOR_RANK_CACHE_KEY);
+
+    if (cached) {
+      const { timestamp, data } = JSON.parse(cached);
+      if (Date.now() - timestamp < ONE_MONTH_TTL) {
+        return data;
+      }
+    }
+
+    const data = await jsonp(`${BASE_URL}?action=sectorRankings`);
+
+    if (Array.isArray(data)) {
+      sessionStorage.setItem(
+        SECTOR_RANK_CACHE_KEY,
+        JSON.stringify({
+          timestamp: Date.now(),
+          data
+        })
+      );
+    }
+
     return Array.isArray(data) ? data : [];
   } catch {
     return [];

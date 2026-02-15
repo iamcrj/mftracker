@@ -7,6 +7,7 @@ import RecentReturns from "./components/RecentReturns";
 import LiveIPO from "./components/LiveIPO";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Disclaimer from "./pages/Disclaimer";
+import SectorRank from "./components/SectorRank";
 
 export default function App() {
   const [page, setPage] = useState("returns");
@@ -19,6 +20,8 @@ export default function App() {
         return <TopFunds />;
       case "recent":
         return <RecentReturns />;
+      case "sectors":
+        return <SectorRank />;
       // case "ipo":
       //   return <LiveIPO />;
       case "privacy":
@@ -73,6 +76,16 @@ export default function App() {
             >
               Trends
             </button>
+
+            <button
+              className={`app-nav-btn ${
+                page === "sectors" ? "active" : ""
+              }`}
+              onClick={() => setPage("sectors")}
+            >
+              Sector Trend
+            </button>
+
 
             {/* <button
               className={`app-nav-btn ${

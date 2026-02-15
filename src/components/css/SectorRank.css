@@ -1,0 +1,96 @@
+.sectorrank {
+  max-width: 1400px;
+  margin: auto;
+  padding: 32px 20px;
+}
+
+.sectorrank__header {
+  margin-bottom: 20px;
+}
+
+.sectorrank__title {
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.sectorrank__subtitle {
+  color: #64748b;
+  font-size: 15px;
+}
+
+.sectorrank__grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 220px;
+  gap: 18px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.sectorrank__column {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+
+.sectorrank__year {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.sectorrank__benchmark {
+  background: #eef2ff;
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sectorrank__cell {
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+  color: white;
+  font-size: 12px;
+}
+
+.sectorrank__rank {
+  font-weight: 700;
+}
+
+.sectorrank__name {
+  font-weight: 600;
+}
+
+.sectorrank__return {
+  opacity: 0.9;
+}
+
+/* Loading */
+
+.sectorrank__loading {
+  padding: 40px;
+  text-align: center;
+  color: #64748b;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #c7d2fe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
